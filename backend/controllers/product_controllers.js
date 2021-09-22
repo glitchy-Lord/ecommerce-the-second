@@ -2,20 +2,30 @@ const Product = require('../models/product');
 
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
+const APIFeatures = require('../utils/apiFeatures');
 
-//* Get all products from the DB
+//* Get all products from the DB => /api/products?keyword=apple
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-	const products = await Product.find();
+	const resPerPage = 4;
+	const productCount = await Product.countDocuments();
+
+	const apiFeatures = new APIFeatures(Product.find(), req.query)
+		.search()
+		.filter()
+		.pagination(resPerPage);
+
+	const products = await apiFeatures.query;
 
 	res.status(200).json({
 		success: true,
 		count: products.length,
 		message: 'got all products',
+		productCount,
 		products,
 	});
 });
 
-//* Get a single product
+//* Get a single product => /api/product
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 	// get the id from the url
 	const { id } = req.params;
@@ -39,7 +49,7 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 	});
 });
 
-//* Create a new product
+//* Create a new product => /api/admin/product/create
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 	const product = await Product.create(req.body);
 
@@ -49,7 +59,7 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 	});
 });
 
-//* Update a product
+//* Update a product => /api/admin/product/:id
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
 	// get the id from the url
 	const { id } = req.params;
@@ -79,7 +89,7 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
 	});
 });
 
-//* Delete a product
+//* Delete a product => /api/admin/product/:id
 exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 	// get the id from the url
 	const { id } = req.params;

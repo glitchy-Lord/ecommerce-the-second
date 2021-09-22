@@ -13,13 +13,13 @@ module.exports = (err, req, res, next) => {
 		});
 	}
 	if (process.env.NODE_ENV === 'PRODUCTION') {
-		// * Wrong Mongoose Object ID Error
+		//* Wrong Mongoose Object ID Error
 		if (err.name === 'CastError') {
 			const message = `Resource not found. Invalid: ${err.path}`;
 			err = new ErrorHandler(message, 400);
 		}
 
-		// * Handling Mongoose Valuation Error
+		//* Handling Mongoose Valuation Error
 		if (err.name === 'ValidationError') {
 			const message = Object.values(err.errors).map(
 				(value) => value.message

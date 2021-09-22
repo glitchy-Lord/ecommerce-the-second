@@ -1,4 +1,4 @@
-// * Handle Uncaught exceptions error
+//* Handle Uncaught exceptions error
 process.on('uncaughtException', (err) => {
 	console.log(`ERROR: ${err.stack}`);
 	console.log('-----------------------------');
@@ -22,7 +22,7 @@ const server = app.listen(process.env.PORT, () => {
 	);
 });
 
-// * Handle UnhandledPromiseRejection
+//* Handle UnhandledPromiseRejection
 process.on('unhandledRejection', (err) => {
 	console.log(`ERROR: ${err.stack}`);
 	console.log('-----------------------------');
