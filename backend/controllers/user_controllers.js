@@ -156,3 +156,126 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
 	sendToken(user, 200, res);
 });
+
+//* Update/Change password => /api/password/update
+exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findById(req.user.id).select('+password');
+
+	//* Check previous password
+	const isMatched = await user.comparePassword(req.body.oldPassword);
+
+	if (!isMatched) {
+		return next(new ErrorHandler('Old Password is incorrect', 400));
+	}
+
+	//* update password
+	user.password = req.body.password;
+
+	//* save changes
+	await user.save();
+
+	sendToken(user, 200, res);
+});
+
+//* Get currently logged in user details => /api/me
+exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findById(req.user.id);
+
+	res.status(200).json({
+		success: true,
+		user,
+	});
+});
+
+//* Update user profile => /api/me/update
+exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
+	const newUserData = {
+		name: req.body.name,
+		email: req.body.email,
+	};
+
+	// todo update profile avatar
+
+	const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+		new: true,
+		runValidators: true,
+		useFindAndModify: false,
+	});
+
+	res.status(200).json({
+		success: true,
+		user,
+	});
+});
+
+//? Admin Routes
+
+//* Get all users => /api/admin/users
+exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {
+	const users = await User.find();
+
+	const userCount = await User.countDocuments();
+
+	res.status(200).json({
+		success: true,
+		message: 'got all user',
+		count: users.length,
+		userCount,
+		users,
+	});
+});
+
+//* Get user details => /api/admin/user/:id
+exports.getSingleUser = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findById(req.params.id);
+
+	if (!user) {
+		return next(new ErrorHandler('User not found', 404));
+	}
+
+	res.status(200).json({
+		success: true,
+		message: 'Found user',
+		user,
+	});
+});
+
+//* Update user profile => /api/admin/user/:id
+exports.updateUser = catchAsyncErrors(async (req, res, next) => {
+	const newUserData = {
+		name: req.body.name,
+		email: req.body.email,
+		role: req.body.role,
+	};
+
+	// todo update profile avatar
+
+	const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+		new: true,
+		runValidators: true,
+		useFindAndModify: false,
+	});
+
+	res.status(200).json({
+		success: true,
+		user,
+	});
+});
+
+//* Delete user => /api/admin/user/:id
+exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findById(req.params.id);
+
+	if (!user) {
+		return next(new ErrorHandler('User not found', 404));
+	}
+
+	// todo Remove avatar from cloudinary
+
+	await user.remove();
+
+	res.status(200).json({
+		success: true,
+		message: 'Deleted user',
+	});
+});

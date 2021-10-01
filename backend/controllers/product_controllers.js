@@ -25,7 +25,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 	});
 });
 
-//* Get a single product => /api/product
+//* Get a single product => /api/product/:id
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 	// get the id from the url
 	const { id } = req.params;
