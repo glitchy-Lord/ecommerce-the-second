@@ -6,7 +6,7 @@ const OrderSchema = mongoose.Schema({
 		city: { type: String, required: true },
 		phoneNumber: { type: String, required: true },
 		postalCode: { type: String, required: true },
-		Country: { type: String, required: true },
+		country: { type: String, required: true },
 	},
 
 	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

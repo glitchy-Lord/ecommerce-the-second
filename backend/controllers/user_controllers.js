@@ -208,7 +208,7 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 	});
 });
 
-//? Admin Routes
+//? ADMIN ROUTES
 
 //* Get all users => /api/admin/users
 exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {

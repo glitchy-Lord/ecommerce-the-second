@@ -49,6 +49,8 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 	});
 });
 
+//? ADMIN ROUTES
+
 //* Create a new product => /api/admin/product/create
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 	req.body.user = req.user.id;
