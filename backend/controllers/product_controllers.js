@@ -6,7 +6,7 @@ const APIFeatures = require('../utils/apiFeatures');
 
 //* Get all products from the DB => /api/products?keyword=apple
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-	const resPerPage = 4;
+	const resPerPage = 8;
 	const productCount = await Product.countDocuments();
 
 	const apiFeatures = new APIFeatures(Product.find(), req.query)

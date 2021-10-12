@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import MetaData from './layout/MetaData';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from 'react-alert';
 
-import { getProducts } from '../actions/productActions';
+import { getProducts, clearErrors } from '../actions/productActions';
+import MetaData from './layout/MetaData';
 import Product from './product/Product';
 import Loader from './layout/Loader';
 
@@ -16,15 +16,13 @@ const Home = () => {
 		(state) => state.products
 	);
 
-	console.log(error);
-
 	useEffect(() => {
-		if (error) {
-			alert.success('Success');
-			return alert.error(error);
-		}
-
 		dispatch(getProducts());
+
+		if (error) {
+			alert.error(error);
+			dispatch(clearErrors());
+		}
 	}, [dispatch, error, alert]);
 
 	return (
